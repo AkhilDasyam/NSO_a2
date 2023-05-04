@@ -1,1 +1,38 @@
+---
+- hosts: all
+  gather_facts: yes
 
+- name: testing the webservers
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: install pip
+      apt:
+        name: python3-pip
+        state: present
+    
+    - name: install flask
+      pip:
+        executable: pip3
+        name: flask
+        state: latest
+    - name: install gunicorn
+      pip:
+        executable: pip3
+        name: gunicorn
+        state: latest
+
+    - name: createnew directory
+      file:
+              path: "/home/flask-app/"
+              state: directory
+    - name: copy app.py to webservers
+      template:
+        src: "application2.py"
+        dest: "/home/flask-app/app.py"
+
+
+    - name: start flask app
+      shell: |
+        cd /home/flask-app/
+        gunicorn --bind 0.0.0.0:80 app:app&  
