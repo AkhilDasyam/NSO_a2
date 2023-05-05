@@ -1,6 +1,6 @@
-Host bastionET2598
+Host bastionNSO
  User ubuntu
- HostName 45.114.123.146
+ HostName <enter_ip_address__of_Bastion_host>   
  UserKnownHostsFile=~/dev/null
  IdentityFile ~/.ssh/id_rsa
  StrictHostKeyChecking no
@@ -11,36 +11,36 @@ Host bastionET2598
 
 Host HAproxy
  User ubuntu
- HostName <ip_address_HAproxy> 
+ HostName <ip_address_of_HAproxy> 
  UserKnownHostsFile=~/dev/null
  IdentityFile ~/.ssh/id_rsa
  StrictHostKeyChecking no
  PasswordAuthentication no
- ProxyCommand ssh -W %h:%p bastionET2598
+ ProxyCommand ssh -W %h:%p bastionNSO
 
 Host devA
  User ubuntu
- HostName <ip_address_devA>
+ HostName <ip_address_of_devA>
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
  PasswordAuthentication no
- ProxyCommand ssh -W %h:%p bastionET2598
+ ProxyCommand ssh -W %h:%p bastionNSO
 
 Host devB
  User ubuntu
- HostName <ip_address_devB>
+ HostName <ip_address_of_devB>
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
  PasswordAuthentication no
- ProxyCommand ssh -W %h:%p bastionET2598
+ ProxyCommand ssh -W %h:%p bastionNSO
 
 Host devC
  user ubuntu
- HostName <ip_address_devC>
+ HostName <ip_address_of_devC>
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
  PasswordAuthentication no
- ProxyCommand ssh -W %h:%p bastionET2598
+ ProxyCommand ssh -W %h:%p bastionNSO
