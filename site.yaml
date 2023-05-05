@@ -34,6 +34,7 @@
        name: haproxy
        state: restarted
 
+#configuring the webservers
 - hosts: webservers
   become: yes
   tasks:
@@ -55,11 +56,11 @@
         name: flask
         state: latest
 
-        #- name: install gunicorn
-        #pip:
-        #executable: pip3
-        #name: gunicorn
-        #state: latest
+    - name: install gunicorn
+      pip:
+        executable: pip3
+        name: gunicorn
+        state: latest
 
 
     - name: createnew directory
@@ -74,10 +75,17 @@
 
     - name: start flask app
       shell: |
-        export FLASK_APP=/home/flask-app/app.py
-        export FLASK_ENV=production
-        flask run --host=0.0.0.0 --port=80 &
+        cd /home/flask-app/
+        gunicorn --bind 0.0.0.0:80 app:app& 
+        
+   #the above code we deployed using gunicorn ( more details in README file)
+   #to use the traditional deployment please replace the above shell command by below one:
+        #shell: |
+        #  export FLASK_APP=/home/flask-app/app.py
+        #  export FLASK_ENV=production
+        #  flask run --host=0.0.0.0 --port=80 &
 
+#testing the HAproxy service
 - hosts: HAproxy
   become: yes
   tasks:
@@ -105,4 +113,4 @@
           register: html_content
         - debug:
             msg: "{{ html_content.content }}"
-~                                                                                                  
+                                                                                                 
