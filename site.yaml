@@ -1,4 +1,3 @@
----
 - hosts: all
   gather_facts: yes
 
@@ -7,22 +6,23 @@
   become: yes
   tasks:
 
-    
-    
-    
+
+
+
 
     - name: Installing HAproxy
       apt:
+
         name: haproxy
         state: present
         update_cache: true
-      
+
 
     - name: gather server ip addresses
       setup:
-            filter: ansible_default_ipv4.address     
-         
-    
+            filter: ansible_default_ipv4.address
+
+
     - name: copy files haproxy.cfg
       template:
         src: haproxy.cfg.j2
@@ -39,14 +39,28 @@
   tasks:
     - name: install pip
       apt:
+
         name: python3-pip
         state: present
-    
+
+    - name: Install Python3
+      become: true
+      apt:
+        name: python3
+        state: present
+
     - name: install flask
       pip:
         executable: pip3
         name: flask
         state: latest
+
+        #- name: install gunicorn
+        #pip:
+        #executable: pip3
+        #name: gunicorn
+        #state: latest
+
 
     - name: createnew directory
       file:
@@ -54,11 +68,41 @@
               state: directory
     - name: copy app.py to webservers
       template:
-        src: "application2.py"
+        src: application.py
         dest: "/home/flask-app/app.py"
 
 
     - name: start flask app
       shell: |
         export FLASK_APP=/home/flask-app/app.py
+        export FLASK_ENV=production
         flask run --host=0.0.0.0 --port=80 &
+
+- hosts: HAproxy
+  become: yes
+  tasks:
+
+        - name: test HAproxy 1
+          uri:
+                  url: "http://localhost/"
+                  return_content:  yes
+          register: html_content
+        - debug:
+            msg: "{{ html_content.content }}"
+
+        - name: test HAproxy 2
+          uri:
+                  url: "http://localhost/"
+                  return_content:  yes
+          register: html_content
+        - debug:
+            msg: "{{ html_content.content }}"
+
+        - name: test HAproxy 3
+          uri:
+                  url: "http://localhost/"
+                  return_content:  yes
+          register: html_content
+        - debug:
+            msg: "{{ html_content.content }}"
+~                                                                                                  
