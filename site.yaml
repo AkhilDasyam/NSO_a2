@@ -5,12 +5,14 @@
   hosts: HAproxy
   become: yes
   tasks:
-
-
-
-
-
-    - name: Installing HAproxy
+   
+   - name: updating apt cache
+     become: true
+     apt:
+       update_cache: true
+   
+   
+   - name: Installing HAproxy
       apt:
 
         name: haproxy
@@ -38,6 +40,12 @@
 - hosts: webservers
   become: yes
   tasks:
+  
+    - name: Updating apt cache
+      become: true
+      apt:
+        update_cache: true
+  
     - name: install pip
       apt:
 
@@ -85,32 +93,8 @@
         #  export FLASK_ENV=production
         #  flask run --host=0.0.0.0 --port=80 &
 
-#testing the HAproxy service
-- hosts: HAproxy
+
+- hosts: webservers
   become: yes
-  tasks:
-
-        - name: test HAproxy 1
-          uri:
-                  url: "http://localhost/"
-                  return_content:  yes
-          register: html_content
-        - debug:
-            msg: "{{ html_content.content }}"
-
-        - name: test HAproxy 2
-          uri:
-                  url: "http://localhost/"
-                  return_content:  yes
-          register: html_content
-        - debug:
-            msg: "{{ html_content.content }}"
-
-        - name: test HAproxy 3
-          uri:
-                  url: "http://localhost/"
-                  return_content:  yes
-          register: html_content
-        - debug:
-            msg: "{{ html_content.content }}"
+  gather_facts: yes
                                                                                                  
