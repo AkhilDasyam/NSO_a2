@@ -1,89 +1,122 @@
-
 ---
--
-
-
-  hosts: webservers
-  become: yes
-  gather_facts: yes
-
-  tasks:
-
-  - name: Updating apt cache
-    become: true
-    apt:
-      update_cache: true
-
-  - name: installing pip3
-    become: true
-    apt:
-      name: python3-pip
-      state: latest
-
-  - name: install flask with pip
-    pip: name=flask
-
-  - name: copy the code
-    copy: 
-      src: application.py 
-      dest: /application.py
-
-  - name: installing gunicorn
-    apt:
-      name: gunicorn
-
-  - name: copy application.py
-    copy:
-      src: application.py
-      dest: /home/ubuntu/application.py
-      owner: ubuntu
-
-  - name: Run Flask app
-    shell: gunicorn -w 2 -D -b 0.0.0.0:8080 application:app
-
-    #the above code we deployed using gunicorn ( more details in README file)
-    #to use the traditional deployment please replace the above shell command by below one:
-        #shell: |
-        #  export FLASK_APP=/home/flask-app/app.py
-        #  export FLASK_ENV=production
-        #  flask run --host=0.0.0.0 --port=80 &
-
-
-
- 
-# haproxy configuration
-
 - hosts: all
   gather_facts: yes
-- hosts: HAproxy
-  become: yes
 
+- name: Configuring the HAproxy loadbalancer
+  hosts: HAproxy
+  become: yes
   tasks:
 
-  - name: updating apt cache
-    become: true
-    apt:
-      update_cache: true
 
-  - name: installing haproxy
-    become: true
-    apt:
-      name: haproxy
-      state: latest
 
-  - name: deploy haproxy configuration
-    template:
-      src: /$PWD/haproxy.cfg.j2
-      dest: /etc/haproxy/haproxy.cfg
 
-  - name: restarting Haproxy
-    service:
-      name: haproxy
-      state: restarted
-      
+
+    - name: Installing HAproxy
+      apt:
+
+        name: haproxy
+        state: present
+        update_cache: true
+
+
+    - name: gather server ip addresses
+      setup:
+            filter: ansible_default_ipv4.address
+
+
+    - name: copy files haproxy.cfg
+      template:
+        src: haproxy.cfg.j2
+        dest: "/etc/haproxy/haproxy.cfg"
+
+
+    - name: restart haproxy
+      service:
+         name: haproxy
+         state: restarted
+
+    - name: install nginx, snmp, snmp-mibs-downloader
+      apt:
+        update_cache: yes
+        name: [ 'nginx', 'snmp', 'snmp-mibs-downloader' ]
+        state: latest
+
+
+    - name: copy snmp conf file
+      template:
+            src: snmp.conf
+            dest: "/etc/snmp/snmp.conf"
+
+    - name: copy nginx config files
+      template:
+         src: nginx.conf.j2
+         dest: "/etc/nginx/nginx.conf"
+
+    - name: nginx start
+      service:
+        name: nginx
+        state: restarted
+
+
+
 - hosts: webservers
   become: yes
-  gather_facts: yes
+  tasks:
+    - name: install pip
+      apt:
+
+        name: python3-pip
+        state: present
+
+    - name: Install Python3
+      become: true
+      apt:
+        name: python3
+        state: present
+
+    - name: install flask
+      pip:
+        executable: pip3
+        name: flask
+        state: latest
+
+    - name: install gunicorn
+      pip:
+        executable: pip3
+        name: gunicorn
+        state: latest
 
 
+    - name: createnew directory
+      file:
+              path: "/home/flask-app/"
+              state: directory
+    - name: copy app.py to webservers
+      template:
+        src: application.py
+        dest: "/home/flask-app/app.py"
 
+    - name: start flask app
+      shell: |
+        cd /home/flask-app/
+        gunicorn --bind 0.0.0.0:80 app:app&
+
+    - name: install snmpd
+      apt:
+              name: snmpd
+              state: latest
+
+    - name: cpy snmpd conf file
+      template:
+              src: snmpd.conf.j2
+              dest: "/etc/snmp/snmpd.conf"
+
+    - name: run snmpd
+      service:
+              name: snmpd
+              state: restarted
+        #- name: start flask app
+        #shell: |
+        #export FLASK_APP=/home/flask-app/app.py
+        #export FLASK_ENV=production
+        #flask run --host=0.0.0.0 --port=80 &
