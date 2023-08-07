@@ -12,6 +12,8 @@
 - name: Configuring the HAproxy loadbalancer
   hosts: HAproxy
   become: yes
+  vars:
+      ui_pass: "{{ lookup('file', './uipassword') }}"
   tasks:
   
 
