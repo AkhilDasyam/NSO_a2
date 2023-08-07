@@ -1,15 +1,19 @@
 ---
 - hosts: all
   gather_facts: yes
+  become: yes 
+
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: true
+
 
 - name: Configuring the HAproxy loadbalancer
   hosts: HAproxy
   become: yes
   tasks:
-
-
-
-
+  
 
     - name: Installing HAproxy
       apt:
@@ -93,7 +97,7 @@
               state: directory
     - name: copy app.py to webservers
       template:
-        src: application.py
+        src: application2.py
         dest: "/home/flask-app/app.py"
 
     - name: start flask app
