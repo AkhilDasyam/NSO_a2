@@ -99,7 +99,7 @@
               state: directory
     - name: copy app.py to webservers
       template:
-        src: application2.py
+        src: application.py
         dest: "/home/flask-app/app.py"
 
     - name: start flask app
