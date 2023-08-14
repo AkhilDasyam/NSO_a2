@@ -12,7 +12,7 @@ Host HAproxy
    IdentityFile <private keyfile path>
    StrictHostKeyChecking no
    PasswordAuthentication no 
-   ProxyJump new_bastion
+   ProxyJump bastionET2598
  
 Host devA
    User ubuntu
@@ -21,7 +21,7 @@ Host devA
    UserKnownHostsFile=~/dev/null
    StrictHostKeyChecking no
    PasswordAuthentication no
-   ProxyJump new_bastion
+   ProxyJump bastionET2598
  
 Host devB
    User ubuntu
@@ -30,7 +30,7 @@ Host devB
    UserKnownHostsFile=~/dev/null
    StrictHostKeyChecking no
    PasswordAuthentication no
-   ProxyJump new_bastion
+   ProxyJump bastionET2598
  
 Host devC
    User ubuntu
@@ -39,4 +39,4 @@ Host devC
    UserKnownHostsFile=~/dev/null
    StrictHostKeyChecking no
    PasswordAuthentication no
-   ProxyJump new_bastion
+   ProxyJump bastionET2598
