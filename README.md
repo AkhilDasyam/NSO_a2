@@ -7,3 +7,7 @@ deployed a simple python flask app on 3 webservers and HAproxy server as a Loadb
 Note:
 
 -playbook script mentions webservers service deployment using both traditional flask deployment and also using a (production-ready)gunicorn deployement (one of them is commented out) . But for ideal production servers , it is better to use an external service instead of traditional flask deployment, because external services like gunicorn, uWSGI are designed to handle multiple http requests and also they can handle higher traffic load whereas the traditional flask deployement is a single threaded applications and is usually used for testing a single-webserving applications but cannot be used as production servers.
+
+#REQUIREMENTS:
+(tested in ) Ubuntu 22.04.2 LTS // ansible-base==2.10.8 //  pip 22.0.2 (python 3.10) //
+ 
