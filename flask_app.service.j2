@@ -1,0 +1,10 @@
+[Unit]
+Description=Flask_App_Service
+
+[Service]
+User=root
+WorkingDirectory=/home/flask-app
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:80 app:app
+Restart=always
+[Install]
+WantedBy=multi-user.target
