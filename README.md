@@ -26,16 +26,16 @@ to over come the mentioned drawbacks we could use-
 async - to run the shell command asynchronously or independent of the main ansible script. we have to set the async value high enough that the command completes execution.
 poll - this is used to check the status of the shell command. The value set to this acts as the frequency to check the status of the shell command
 
-eg ansible script snippet:
+example ansible script snippet:   <br>  
 
-tasks:
+tasks: <br>  
 
-   - name: Start Flask app through shell
-     shell: "nohup /path/to/app/start_command &"
-     async: 300  # Set to a reasonable value
-     poll: 0
+   - name: Start Flask app through shell  
+     shell: "nohup gunicorn --bind 0.0.0.0:80 app:app&"   
+     async: 300  # Set to a reasonable value  
+     poll: 0  
 
-
+  
 And to handle the server restarts, we can use init scripts or external libraries which can monitor the process id and which can be able to restart those services upon server restart.
 
 
