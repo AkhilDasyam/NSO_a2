@@ -38,7 +38,7 @@ tasks:
 
 And to handle the server restarts, we can use init scripts or external libraries which can monitor the process id and which can be able to restart those services upon server restart.
 
-# **************************************************************************************
+
 
 
  
