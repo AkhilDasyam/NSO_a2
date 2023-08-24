@@ -31,7 +31,7 @@ example ansible script snippet:   <br>
 tasks: <br>  
 
    - name: Start Flask app through shell  
-     shell: "nohup gunicorn --bind 0.0.0.0:80 app:app&"   
+     shell: "gunicorn --bind 0.0.0.0:80 app:app&"   
      async: 300  # Set to a reasonable value  
      poll: 0  
 
