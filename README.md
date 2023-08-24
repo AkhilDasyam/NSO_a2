@@ -12,7 +12,7 @@ Note:
 (tested in ) Ubuntu 22.04.2 LTS // ansible-base==2.10.8 //  pip 22.0.2 (python 3.10) //
 
 
-****** NEW UPDATE - FLASK-GUNICORN IS INITIATED AS A SERVICE IN ANSIBLE SCRIPT *******
+# ****** NEW UPDATE - FLASK-GUNICORN IS INITIATED AS A SERVICE IN ANSIBLE SCRIPT *******
 
 In previous version of this project, in ansible script (site.yaml) the flask-gunicorn service is initiated as a systemd service instead of running through the shell.
 In a production environment, runnning through systemd is always preferred rather than shell due to multiple reasons. Here are the few reasons:
@@ -20,7 +20,25 @@ In a production environment, runnning through systemd is always preferred rather
 - To run a service through systemd we need a unit file (i.e., a .service file here) to start the service, so only the administrator could access the file. So, starting a service through systemd is more secure than starting through a shell
 - And services deployed through systemd are always logged ( we can check through command - journalctl -u <unit-file>) , so that it is easier to monitor and trouble shoot the deployment of the service.
 
-**************************************************************************************
+If we still want to use shell to deploy the service:
+
+to over come the mentioned drawbacks we could use- 
+async - to run the shell command asynchronously or independent of the main ansible script. we have to set the async value high enough that the command completes execution.
+poll - this is used to check the status of the shell command. The value set to this acts as the frequency to check the status of the shell command
+
+eg ansible script snippet:
+
+tasks:
+
+   - name: Start Flask app through shell
+     shell: "nohup /path/to/app/start_command &"
+     async: 300  # Set to a reasonable value
+     poll: 0
+
+
+And to handle the server restarts, we can use init scripts or external libraries which can monitor the process id and which can be able to restart those services upon server restart.
+
+# **************************************************************************************
 
 
  
