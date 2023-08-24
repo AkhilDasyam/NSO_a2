@@ -18,7 +18,7 @@ In previous version of this project, in ansible script (site.yaml) the flask-gun
 In a production environment, runnning through systemd is always preferred rather than shell due to multiple reasons. Here are the few reasons:
 - If the if any service was initiated with systemd that service would automatically restarting when the server restarts or if the service crashes due to some other reasons, where as in shell we have to manually restart the service through shell again.
 - To run a service through systemd we need a unit file (i.e., a .service file here) to start the service, so only the administrator could access the file. So, starting a service through systemd is more secure than starting through a shell
-- And services deployed through systemd are always logged ( we can check through command - journalctl -u <unit-file>) , so that it is easier to monitor and trouble shoot the deployment of the service.
+- And services deployed through systemd are always logged ( we can check through command - journalctl -u *<unit-file>*) , so that it is easier to monitor and trouble shoot the deployment of the service.
 
 If we still want to use shell to deploy the service:
 
