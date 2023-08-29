@@ -134,3 +134,30 @@
         #flask run --host=0.0.0.0 --port=80 &
 
 
+- hosts: HAproxy
+  become: yes
+  tasks:
+    - name: test HAproxy 1
+      uri:
+        url: "http://{{ hostvars['HAproxy'].ansible_default_ipv4.address }}:80/"
+        return_content: yes
+      register: html_content
+    - debug:
+        msg: "{{ html_content.content }}"
+
+    - name: test HAproxy 2
+      uri:
+        url: "http://{{ hostvars['HAproxy'].ansible_default_ipv4.address }}:80/"
+        return_content: yes
+      register: html_content
+    - debug:
+        msg: "{{ html_content.content }}"
+    
+    - name: test HAproxy 3
+      uri:
+        url: "http://{{ hostvars['HAproxy'].ansible_default_ipv4.address }}:80/"
+        return_content: yes
+      register: html_content
+    - debug:
+        msg: "{{ html_content.content }}"
+
